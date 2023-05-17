@@ -3,6 +3,9 @@ import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
 import { IAuthRes, ICustomRequest } from "./types/auth.types";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { RolesGuard } from "./guards/role.guard";
+import { Roles } from "./decorators/role.decorator";
+import { USER_ROLE } from "../user/types/user.types";
 
 @Controller("auth")
 export class AuthController {
@@ -14,7 +17,8 @@ export class AuthController {
 	}
 
 	@Get()
-	@UseGuards(JwtAuthGuard)
+	@Roles(USER_ROLE.ADMIN)
+	@UseGuards(JwtAuthGuard, RolesGuard)
 	getUser(@Req() req: ICustomRequest) {
 		return req.user;
 	}
