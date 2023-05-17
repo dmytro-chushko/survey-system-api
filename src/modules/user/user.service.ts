@@ -19,11 +19,12 @@ export class UserService {
 
 	async createUser(userDto: UserDto): Promise<Omit<IUser, "password">> {
 		try {
-			const user = await this.userModel.findOne({ email: userDto.email });
+			const { email, password } = userDto;
+			const user = await this.findByEmail(email);
 			if (user) {
 				throw new HttpException("user already exists", HttpStatus.BAD_REQUEST);
 			}
-			const hashedPassword = await hash(userDto.password, 10);
+			const hashedPassword = await hash(password, 10);
 			const createdUser = new this.userModel({ ...userDto, password: hashedPassword });
 
 			await createdUser.save();
@@ -37,7 +38,7 @@ export class UserService {
 	async findByLogin(loginDto: LoginDto): Promise<IUserPayload> {
 		try {
 			const { email, password } = loginDto;
-			const user = await this.userModel.findOne({ email });
+			const user = await this.findByEmail(email);
 			if (!user) {
 				throw new HttpException("user doesnt exists", HttpStatus.BAD_REQUEST);
 			}
@@ -47,6 +48,16 @@ export class UserService {
 			}
 
 			return { id: user.id, email: user.email, role: user.role };
+		} catch (error) {
+			throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	async findByEmail(email: string): Promise<IUser> {
+		try {
+			const user = await this.userModel.findOne({ email });
+
+			return user;
 		} catch (error) {
 			throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
