@@ -31,7 +31,7 @@ export class UserService {
 
 			return this.sanitizeUser(createdUser);
 		} catch (error) {
-			throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new HttpException(`${error}`, error.status);
 		}
 	}
 
@@ -49,7 +49,7 @@ export class UserService {
 
 			return { id: user.id, email: user.email, role: user.role };
 		} catch (error) {
-			throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new HttpException(`${error.response}`, error.status);
 		}
 	}
 
@@ -59,7 +59,7 @@ export class UserService {
 
 			return user;
 		} catch (error) {
-			throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new HttpException(`${error}`, error.status);
 		}
 	}
 }

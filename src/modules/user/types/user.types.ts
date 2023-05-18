@@ -17,3 +17,8 @@ export interface IUserPayload {
 	email: string;
 	role: USER_ROLE;
 }
+
+export interface IUserInfo {
+	email: string;
+	role: USER_ROLE;
+}
