@@ -1,11 +1,11 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
-import { IAuthRes, ICustomRequest } from "./types/auth.types";
+import { IAuthRes, ICustomRequest } from "../../types/auth.types";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { RolesGuard } from "./guards/role.guard";
 import { Roles } from "./decorators/role.decorator";
-import { USER_ROLE } from "../user/types/user.types";
+import { USER_ROLE } from "../../types/user.types";
 import { ROUTE_KEYS } from "src/utils/consts";
 
 @Controller(ROUTE_KEYS.AUTH)

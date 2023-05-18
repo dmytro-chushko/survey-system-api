@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { compare, hash } from "bcrypt";
-import { IUser, IUserPayload } from "./types/user.types";
+import { IUser, IUserPayload } from "../../types/user.types";
 import { User } from "./schemas/user.schema";
 import { UserDto } from "./dto/user.dto";
 import { LoginDto } from "../auth/dto/login.dto";

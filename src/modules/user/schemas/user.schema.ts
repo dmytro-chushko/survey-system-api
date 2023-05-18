@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { USER_ROLE } from "../types/user.types";
+import { USER_ROLE } from "../../../types/user.types";
 
 @Schema()
 export class User {

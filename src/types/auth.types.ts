@@ -1,4 +1,4 @@
-import { IUser, USER_ROLE } from "src/modules/user/types/user.types";
+import { IUser, USER_ROLE } from "src/types/user.types";
 
 export interface IAuthRes {
 	token: string;

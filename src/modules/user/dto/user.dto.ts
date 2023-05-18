@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
-import { USER_ROLE } from "../types/user.types";
+import { USER_ROLE } from "../../../types/user.types";
 
 export class UserDto {
 	@IsString()
