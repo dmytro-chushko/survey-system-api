@@ -33,18 +33,50 @@ export class SurveysService {
 
 	async createQuestion(questionDto: QuestionDto): Promise<IQuestion> {
 		try {
-			const { content, categoryId } = questionDto;
-			const category = await this.categoryModel.findById(categoryId);
+			const { question, answers, categoryId } = questionDto;
+			const category = await this.getCategoryById(categoryId);
 			if (!category) {
 				throw new HttpException("invalid category id", HttpStatus.BAD_REQUEST);
 			}
-			const newQuestion = new this.questionModel({ content, category });
+			const newQuestion = new this.questionModel({ question, answers, category });
 
 			category.questions.push(newQuestion.id);
 			await category.save();
 			await newQuestion.save();
 
 			return newQuestion;
+		} catch (error) {
+			throw new HttpException(`${error}`, error.status);
+		}
+	}
+
+	async getCategories(): Promise<ICategory[]> {
+		try {
+			const categories = await this.categoryModel.find({}, null, { select: "-questions" });
+
+			return categories;
+		} catch (error) {
+			throw new HttpException(`${error}`, error.status);
+		}
+	}
+
+	async getCategoryById(id: string): Promise<ICategory> {
+		try {
+			const category = await this.categoryModel
+				.findById(id)
+				.populate({ path: "questions", select: "-category" });
+
+			return category;
+		} catch (error) {
+			throw new HttpException(`${error}`, error.status);
+		}
+	}
+
+	async getQuestions(): Promise<IQuestion[]> {
+		try {
+			const questions = await this.questionModel.find();
+
+			return questions;
 		} catch (error) {
 			throw new HttpException(`${error}`, error.status);
 		}
