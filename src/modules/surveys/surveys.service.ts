@@ -6,6 +6,7 @@ import { ICategory, IQuestion } from "src/types/survey.types";
 import { Question } from "./schemas/question.schema";
 import { CategoryDto } from "./dto/category.dto";
 import { QuestionDto } from "./dto/question.dto";
+import { IUser } from "src/types/user.types";
 
 @Injectable()
 export class SurveysService {
@@ -90,5 +91,14 @@ export class SurveysService {
 		} catch (error) {
 			throw new HttpException(`${error}`, error.status);
 		}
+	}
+
+	async addInterviewedUser(user: IUser, categoryId: string): Promise<ICategory> {
+		const category = await this.getCategoryById(categoryId);
+		category.interviewedUsers.push(user);
+
+		await category.save();
+
+		return category;
 	}
 }

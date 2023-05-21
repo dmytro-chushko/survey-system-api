@@ -1,29 +1,46 @@
-import { Body, Controller, Post, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
 import { ROUTE_KEYS } from "src/utils/consts";
 import { AnswersService } from "./answers.service";
 import { Roles } from "../auth/decorators/role.decorator";
 import { USER_ROLE } from "src/types/user.types";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/role.guard";
-import { ISubmitedAnswers } from "src/types/answer.types";
+import { IAnswer, ISubmitedAnswers } from "src/types/answer.types";
+import { ICustomRequest } from "src/types/auth.types";
+import { SurveysService } from "../surveys/surveys.service";
 
 @Controller(ROUTE_KEYS.ANSWERS)
 export class AnswersController {
-	constructor(private readonly answersService: AnswersService) {}
+	constructor(
+		private readonly answersService: AnswersService,
+		private readonly surveysService: SurveysService,
+	) {}
 
 	@Post()
 	@Roles(USER_ROLE.GUEST)
 	@UseGuards(JwtAuthGuard, RolesGuard)
-	submitSurvey(@Body() submitedAnswers: ISubmitedAnswers): { message: string } {
-		const { answers, categoryId, userEmail } = submitedAnswers;
+	async submitSurvey(
+		@Body() submitedAnswers: ISubmitedAnswers,
+		@Req() req: ICustomRequest,
+	): Promise<{ message: string }> {
+		const { answers, categoryId } = submitedAnswers;
+		const { user } = req;
+		const category = await this.surveysService.addInterviewedUser(user, categoryId);
 		Object.keys(answers).map(questionId =>
 			this.answersService.createAnswer({
 				answer: answers[questionId],
 				questionId,
-				categoryId,
-				userEmail,
+				category,
+				user,
 			}),
 		);
 		return { message: "Survey has been submited" };
+	}
+
+	@Get()
+	@Roles(USER_ROLE.ADMIN)
+	@UseGuards(JwtAuthGuard, RolesGuard)
+	getAnswers(): Promise<IAnswer[]> {
+		return this.answersService.getAnswers();
 	}
 }

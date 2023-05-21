@@ -1,4 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
+import { ICategory } from "src/types/survey.types";
+import { IUser } from "src/types/user.types";
 
 export class AnswerDto {
 	@IsString()
@@ -11,9 +13,9 @@ export class AnswerDto {
 
 	@IsString()
 	@IsNotEmpty()
-	readonly categoryId: string;
+	readonly category: ICategory;
 
 	@IsString()
 	@IsNotEmpty()
-	readonly userEmail: string;
+	readonly user: IUser;
 }

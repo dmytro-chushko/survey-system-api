@@ -10,5 +10,4 @@ export interface IAnswer extends Document {
 export interface ISubmitedAnswers {
 	answers: Record<string, string>;
 	categoryId: string;
-	userEmail: string;
 }
