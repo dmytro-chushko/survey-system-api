@@ -8,4 +8,5 @@ export enum ROUTE_KEYS {
 	SURVEYS = "surveys",
 	CATEGORIES = "categories",
 	QUESTIONS = "questions",
+	ANSWERS = "answers",
 }

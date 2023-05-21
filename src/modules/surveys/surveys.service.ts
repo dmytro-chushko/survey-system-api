@@ -81,4 +81,14 @@ export class SurveysService {
 			throw new HttpException(`${error}`, error.status);
 		}
 	}
+
+	async getQuestionById(id: string): Promise<IQuestion> {
+		try {
+			const question = this.questionModel.findById(id);
+
+			return question;
+		} catch (error) {
+			throw new HttpException(`${error}`, error.status);
+		}
+	}
 }
