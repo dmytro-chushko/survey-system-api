@@ -53,7 +53,9 @@ export class SurveysService {
 
 	async getCategories(): Promise<ICategory[]> {
 		try {
-			const categories = await this.categoryModel.find({}, null, { select: "-questions" });
+			const categories = await this.categoryModel
+				.find({}, null, { select: "-questions" })
+				.populate({ path: "interviewedUsers", select: "email" });
 
 			return categories;
 		} catch (error) {
@@ -63,9 +65,13 @@ export class SurveysService {
 
 	async getCategoryById(id: string): Promise<ICategory> {
 		try {
-			const category = await this.categoryModel
-				.findById(id)
-				.populate({ path: "questions", select: "-category" });
+			const category = await this.categoryModel.findById(id).populate([
+				{ path: "questions", select: "-category" },
+				{ path: "interviewedUsers", select: "email" },
+			]);
+			if (!category) {
+				throw new HttpException("invalid category id", HttpStatus.BAD_REQUEST);
+			}
 
 			return category;
 		} catch (error) {
@@ -94,11 +100,15 @@ export class SurveysService {
 	}
 
 	async addInterviewedUser(user: IUser, categoryId: string): Promise<ICategory> {
-		const category = await this.getCategoryById(categoryId);
-		category.interviewedUsers.push(user);
+		try {
+			const category = await this.getCategoryById(categoryId);
+			category.interviewedUsers.push(user);
 
-		await category.save();
+			await category.save();
 
-		return category;
+			return category;
+		} catch (error) {
+			throw new HttpException(`${error}`, error.status);
+		}
 	}
 }

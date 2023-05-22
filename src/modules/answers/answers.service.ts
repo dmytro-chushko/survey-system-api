@@ -27,9 +27,9 @@ export class AnswersService {
 		}
 	}
 
-	async getAnswers(): Promise<IAnswer[]> {
+	async getAnswersByCategory(categoryId: string): Promise<IAnswer[]> {
 		try {
-			const answers = await this.answerModel.find();
+			const answers = await this.answerModel.find().where({ category: categoryId });
 
 			return answers;
 		} catch (error) {

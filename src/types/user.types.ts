@@ -19,6 +19,7 @@ export interface IUserPayload {
 }
 
 export interface IUserInfo {
+	_id: string;
 	email: string;
 	role: USER_ROLE;
 }

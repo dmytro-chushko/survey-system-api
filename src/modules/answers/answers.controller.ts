@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { ROUTE_KEYS } from "src/utils/consts";
 import { AnswersService } from "./answers.service";
 import { Roles } from "../auth/decorators/role.decorator";
@@ -37,10 +37,10 @@ export class AnswersController {
 		return { message: "Survey has been submited" };
 	}
 
-	@Get()
+	@Get(":id")
 	@Roles(USER_ROLE.ADMIN)
 	@UseGuards(JwtAuthGuard, RolesGuard)
-	getAnswers(): Promise<IAnswer[]> {
-		return this.answersService.getAnswers();
+	getAnswersByCategory(@Param("id") categoryId: string): Promise<IAnswer[]> {
+		return this.answersService.getAnswersByCategory(categoryId);
 	}
 }

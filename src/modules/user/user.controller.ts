@@ -18,8 +18,8 @@ export class UserController {
 	@Get(ROUTE_KEYS.INFO)
 	@UseGuards(JwtAuthGuard)
 	async getUserInfo(@Req() req: ICustomRequest): Promise<IUserInfo> {
-		const { email, role } = await this.userService.findByEmail(req.user.email);
+		const { _id, email, role } = await this.userService.findByEmail(req.user.email);
 
-		return { email, role };
+		return { _id, email, role };
 	}
 }
