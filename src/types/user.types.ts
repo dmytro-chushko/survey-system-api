@@ -9,7 +9,6 @@ export interface IUser extends Document {
 	email: string;
 	password: string;
 	role: USER_ROLE;
-	passedCategories: string[];
 }
 
 export interface IUserPayload {
